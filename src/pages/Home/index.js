@@ -15,9 +15,6 @@ import { useData } from "../../contexts/DataContext";
 const Page = () => {
   const { data } = useData();
 
-  // J'ai ajouté une vérification pour m'assurer que les données sont bien chargées et éviter une erreur dans la console
-  if (!data) return null;
-
   // Je récupère le dernier événement pour l'afficher dans le footer
   const last = data?.events?.[data.events.length - 1];
 
@@ -124,13 +121,16 @@ const Page = () => {
       <footer className="row">
         <div className="col presta">
           <h3>Notre derniére prestation</h3>
-          <EventCard
-            imageSrc={last?.cover}
-            title={last?.title}
-            date={new Date(last?.date)}
-            small
-            label="boom"
-          />
+          {/* Si last existe, on affiche le dernier événement */}
+          {last && (
+            <EventCard
+              imageSrc={last?.cover}
+              title={last?.title}
+              date={new Date(last?.date)}
+              small
+              label="boom"
+            />
+          )}
         </div>
         <div className="col contact">
           <h3>Contactez-nous</h3>
