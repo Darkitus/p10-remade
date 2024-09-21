@@ -37,9 +37,9 @@ const Slider = () => {
   return (
     <div className="SlideCardList">
       {byDateDesc?.map((event, idx) => (
-        <>
+        // Ajout de la clé à l'élément parent pour éviter la duplication des clés
+        <div key={event.id}>
           <div
-            key={event.title}
             className={`SlideCard SlideCard--${
               index === idx ? "display" : "hide"
             }`}
@@ -69,7 +69,7 @@ const Slider = () => {
               ))}
             </div>
           </div>
-        </>
+        </div>
       ))}
     </div>
   );
