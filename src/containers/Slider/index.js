@@ -10,12 +10,30 @@ const Slider = () => {
   const byDateDesc = data?.focus.sort((evtA, evtB) =>
     new Date(evtA.date) < new Date(evtB.date) ? -1 : 1
   );
+
+  // console.log("byDateDesc", byDateDesc);
+
   const nextCard = () => {
-    setTimeout(() => setIndex(index < byDateDesc.length ? index + 1 : 0), 5000);
+    setTimeout(() => {
+      // Vérification de l'existence de byDateDesc car il est undefined lors du premier rendu
+      if (byDateDesc) {
+        // Récupération de l'index du dernier élément du tableau pour l'utilisation dans la ternaire du setIndex
+        const lastIndex = byDateDesc.length - 1;
+        // Utilisation de lastIndex à la place de byDateDesc.length pour éviter l'affichage d'une slide blanche..
+        // ..lorsque l'on essai d'acceder à un index qui n'existe pas (index 3)
+        setIndex(index < lastIndex ? index + 1 : 0);
+      }
+    }, 5000);
   };
+
+  // console.log("nextCard", index);
+
   useEffect(() => {
     nextCard();
-  });
+  }, [index, byDateDesc]);
+  // Ajout de l'index et de byDateDesc dans les dépendances du useEffect pour garantir que la fonction nextCard est appelée chaque fois que l'index ou les données changent.
+  // Cela permet de s'assurer que l'image affichée et la pagination sont mises à jour correctement.
+
   return (
     <div className="SlideCardList">
       {byDateDesc?.map((event, idx) => (
@@ -37,12 +55,16 @@ const Slider = () => {
           </div>
           <div className="SlideCard__paginationContainer">
             <div className="SlideCard__pagination">
-              {byDateDesc.map((_, radioIdx) => (
+              {/* // Ajout de l'element dans le map afin de pouvoir accéder à l'id de l'event pour éviter la duplication des keys */}
+              {byDateDesc.map((radioEvent, radioIdx) => (
                 <input
-                  key={`${event.id}`}
+                  // Utilisation de radioEvent.id pour définir la key à la place de event.id
+                  // Une propriété id a aussi été ajouté à l'event dans le fichier events.json, dans la propriété focus
+                  key={`${radioEvent.id}`}
                   type="radio"
                   name="radio-button"
-                  checked={idx === radioIdx}
+                  checked={index === radioIdx} // Ajout de la condition pour cocher le bouton radio correspondant à l'index actuel
+                  readOnly
                 />
               ))}
             </div>
